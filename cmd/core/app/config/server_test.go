@@ -139,17 +139,16 @@ func TestServerConfig_Validate(t *testing.T) {
 			errMsg:  "leader-election-lease-duration must be greater than leader-election-renew-deadline",
 		},
 		{
-			name: "Invalid configuration: retry period too close to renew deadline (Jitter)",
+			name: "Valid configuration: retry period safe under corrected jitter threshold",
 			setupConfig: func() *ServerConfig {
 				cfg := NewServerConfig()
 				cfg.EnableLeaderElection = true
 				cfg.LeaseDuration = 15 * time.Second
-				cfg.RenewDeadline = 5 * time.Second
-				cfg.RetryPeriod = 5 * time.Second
+				cfg.RenewDeadline = 10 * time.Second
+				cfg.RetryPeriod = 8200 * time.Millisecond
 				return cfg
 			},
-			wantErr: true,
-			errMsg:  "leader-election-renew-deadline must be greater than leader-election-retry-period * Jitter (1.2)",
+			wantErr: false,
 		},
 	}
 

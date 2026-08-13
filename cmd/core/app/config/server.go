@@ -82,7 +82,7 @@ func (c *ServerConfig) Validate() error {
 	if c.LeaseDuration <= c.RenewDeadline {
 		return fmt.Errorf("leader-election-lease-duration must be greater than leader-election-renew-deadline")
 	}
-	if c.RetryPeriod >= c.RenewDeadline-c.RenewDeadline/5 {
+	if c.RetryPeriod*6 >= c.RenewDeadline*5 {
 		return fmt.Errorf("leader-election-renew-deadline must be greater than leader-election-retry-period * Jitter (1.2)")
 	}
 	return nil
